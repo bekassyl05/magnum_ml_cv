@@ -1,0 +1,25 @@
+runtime,threads,stage,mean_ms,median_ms,p95_ms,n
+pytorch,1,"model forward, batch 1",51.09,50.44,55.33,100
+pytorch,1,"end-to-end per image, batch 1",54.97,52.95,66.21,100
+pytorch,1,"model forward per image, batch 32",47.31,46.85,48.83,5
+onnxruntime,1,"model forward, batch 1",33.29,33.09,34.99,100
+onnxruntime,1,"end-to-end per image, batch 1",36.77,35.29,38.02,100
+onnxruntime,1,"model forward per image, batch 32",31.98,32.07,32.12,5
+pytorch,2,"model forward, batch 1",33.86,32.54,44.48,100
+pytorch,2,"end-to-end per image, batch 1",37.45,35.8,48.57,100
+pytorch,2,"model forward per image, batch 32",26.99,27.12,27.93,5
+onnxruntime,2,"model forward, batch 1",19.44,19.1,22.31,100
+onnxruntime,2,"end-to-end per image, batch 1",23.42,21.41,36.89,100
+onnxruntime,2,"model forward per image, batch 32",17.61,17.36,18.32,5
+pytorch,4,"model forward, batch 1",24.78,25.46,28.19,100
+pytorch,4,"end-to-end per image, batch 1",28.34,27.82,30.97,100
+pytorch,4,"model forward per image, batch 32",18.28,18.05,19.11,5
+onnxruntime,4,"model forward, batch 1",12.62,12.38,15.55,100
+onnxruntime,4,"end-to-end per image, batch 1",16.11,14.81,18.83,100
+onnxruntime,4,"model forward per image, batch 32",12.46,12.95,13.72,5
+pytorch,16,"model forward, batch 1",13.66,13.08,16.63,100
+pytorch,16,"end-to-end per image, batch 1",17.55,15.55,19.87,100
+pytorch,16,"model forward per image, batch 32",8.37,8.32,8.55,5
+onnxruntime,16,"model forward, batch 1",6.61,6.91,7.51,100
+onnxruntime,16,"end-to-end per image, batch 1",10.73,9.46,10.21,100
+onnxruntime,16,"model forward per image, batch 32",5.3,5.22,5.49,5

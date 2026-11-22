@@ -1,0 +1,5 @@
+val_ID_target,threshold,val_ID_kept,other_veg_rejected,no_veg_frames_rejected,test_ID_kept,test_acc_of_kept
+0.99,0.045,0.99,0.356,0.0,0.998,0.932
+0.975,0.154,0.973,0.41,0.045,0.992,0.933
+0.95,0.325,0.95,0.553,0.091,0.979,0.936
+0.9,0.519,0.9,0.622,0.273,0.947,0.945

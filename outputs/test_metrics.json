@@ -1,0 +1,28 @@
+{
+  "acc": 0.9316770186335404,
+  "macro_f1": 0.925845263955257,
+  "acc_group_balanced": 0.9902725117921731,
+  "macro_f1_group_balanced": 0.9881832002270682,
+  "n_test": 966,
+  "n_groups": 42,
+  "acc_ci95_group_bootstrap": [
+    0.7808213019250253,
+    1.0
+  ],
+  "macro_f1_ci95_group_bootstrap": [
+    0.7712073792907345,
+    1.0
+  ],
+  "ece": 0.11398685900937947,
+  "majority_class_baseline": 0.2650103519668737,
+  "mean_conf_correct": 0.8374005556106567,
+  "mean_conf_wrong": 0.5783717632293701,
+  "frames_n": 930,
+  "frames_acc": 0.9290322580645162,
+  "frames_macro_f1": 0.9226801257962819,
+  "photos_n": 36,
+  "photos_acc": 1.0,
+  "photos_macro_f1": 1.0,
+  "test_in_train_exact_n": 0,
+  "acc_on_files_not_in_train": 0.9316770186335404
+}

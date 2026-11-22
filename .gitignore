@@ -1,0 +1,18 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.idea/
+.ipynb_checkpoints/
+data/
+
+# weights: ignore all except the final one
+*.pt
+*.pth
+!models/best.pt
+!models/final.pt
+!models/best.onnx
+
+# heavy caches
+outputs/emb.npy
+reports/interview_prep.md

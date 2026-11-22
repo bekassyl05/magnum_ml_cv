@@ -1,0 +1,67 @@
+Files: 9259; unique by MD5: 3879; thresholds: phash<=6 & dhash<=6 OR cosine>=0.97
+
+== (a) EXACT duplicates (MD5) ==
+Dataset/: 3879 files, 3879 unique -> 0 exact duplicate files
+MD5 present in >1 class (label conflict): 0
+official test files with identical file in train: 717 / 799
+official val files with identical file in train: 727 / 802
+official test files with identical file in val: 108 / 799
+official files whose MD5 is also in Dataset/: 5380 / 5380
+Dataset/ files whose MD5 is in official: 3879 / 3879
+official files with the same class+filename as in Dataset/: 5380 (identical bytes: 5380)
+official per split/class: n files, n found in Dataset/ by MD5
+                 size   sum
+source cls                 
+test   Capsicum   117   117
+       Carrot     177   177
+       Cucumber    58    58
+       Potato     114   114
+       Raddish     79    79
+       Squash     254   254
+train  Capsicum   590   590
+       Carrot     876   876
+       Cucumber   295   295
+       Potato     416   416
+       Raddish    283   283
+       Squash    1319  1319
+val    Capsicum   117   117
+       Carrot     174   174
+       Cucumber    57    57
+       Potato     116   116
+       Raddish     79    79
+       Squash     259   259
+
+== (b) NEAR duplicates + clusters ==
+edges: 88191; clusters: 889; singletons: 0; biggest sizes: [410, 298, 250, 236, 209, 198, 177, 164]
+clusters spanning >1 class (label conflicts / too-loose threshold): 0
+cross-class edges: 0 of 88191
+images with at least one near-duplicate neighbour: 100.0%
+clusters that merge >1 video/photo group: 0
+
+== (c) LEAKAGE in official split ==
+videos in official: 204; present in >1 split: 105; in all 3 splits: 24
+val frames whose video_id also occurs in train: 798 / 802 (99.5%)
+test frames whose video_id also occurs in train: 792 / 799 (99.1%)
+standalone photos (no video id) in official: 276
+filenames that appear in >1 official split: 1450
+val files in a near-dup cluster that also has train files: 788 / 802
+test files in a near-dup cluster that also has train files: 783 / 799
+
+[val -> train] nearest train image is from the SAME video/photo group: 99.5%
+   median cosine to nearest train image: same-group 1.000 | other-groups 0.883
+   val images with a train image at cosine>=0.9: 99.9%
+   val images with a train image at cosine>=0.95: 98.6%
+   val images with a train image at cosine>=0.98: 95.8%
+   val images with a train image at cosine>=0.99: 92.3%
+   val images with a train image at phash+dhash distance<=12: 95.9%
+[test -> train] nearest train image is from the SAME video/photo group: 99.1%
+   median cosine to nearest train image: same-group 1.000 | other-groups 0.880
+   test images with a train image at cosine>=0.9: 99.6%
+   test images with a train image at cosine>=0.95: 98.5%
+   test images with a train image at cosine>=0.98: 95.4%
+   test images with a train image at cosine>=0.99: 91.2%
+   test images with a train image at phash+dhash distance<=12: 94.5%
+Dataset/ images whose nearest OTHER-group image has phash dist 0-2: 0
+Dataset/ images whose nearest OTHER-group image has phash dist 3-5: 0
+Dataset/ images whose nearest OTHER-group image has phash dist 6-8: 4
+Dataset/ images whose nearest OTHER-group image has phash dist 9-12: 99

@@ -1,0 +1,13 @@
+key,cls,n,acc,most_common_wrong
+photos:Capsicum,Capsicum,8,1.0,
+video:20251117_134205,Capsicum,164,0.6158536585365854,Cucumber
+photos:Carrot,Carrot,5,1.0,
+video:20260101_135022,Carrot,186,1.0,
+photos:Cucumber,Cucumber,3,1.0,
+video:20260101_132322,Cucumber,125,1.0,
+photos:Potato,Potato,9,1.0,
+video:20251113_205825,Potato,98,0.9795918367346939,Cucumber
+photos:Raddish,Raddish,5,1.0,
+video:20251210_230730,Raddish,107,1.0,
+photos:Squash,Squash,6,1.0,
+video:20260101_133006,Squash,250,0.996,Capsicum

@@ -1,0 +1,17 @@
+threads,stage,mean_ms,median_ms,p95_ms,n,cpu,logical_cores,os,python,torch,weights
+1,preprocess (decode+resize),30.41,33.46,67.9,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+1,"model forward, batch 1",87.34,80.13,139.56,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+1,"end-to-end per image, batch 1",117.75,113.0,204.3,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+1,"model forward per image, batch 32",71.61,74.13,74.54,5,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+2,preprocess (decode+resize),5.54,3.2,4.47,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+2,"model forward, batch 1",56.62,62.36,73.75,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+2,"end-to-end per image, batch 1",62.15,66.08,79.42,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+2,"model forward per image, batch 32",46.51,45.99,48.71,5,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+4,preprocess (decode+resize),5.66,3.45,4.25,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+4,"model forward, batch 1",42.8,43.03,45.85,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+4,"end-to-end per image, batch 1",48.46,46.58,51.2,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+4,"model forward per image, batch 32",28.21,28.36,28.68,5,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+16,preprocess (decode+resize),5.92,3.38,4.15,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+16,"model forward, batch 1",21.96,21.6,25.52,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+16,"end-to-end per image, batch 1",27.89,24.98,32.41,100,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt
+16,"model forward per image, batch 32",12.27,12.06,13.11,5,"AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",16,Windows-11-10.0.26200-SP0,3.12.5,2.5.1+cpu,final.pt

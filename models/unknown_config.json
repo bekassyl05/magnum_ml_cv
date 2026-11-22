@@ -1,0 +1,8 @@
+{
+  "score": "energy",
+  "threshold": 0.32529544830322327,
+  "temperature": 0.43900316236413695,
+  "criterion": "val ID retention >= 0.95",
+  "calibrated_on": "best.pt, val split + OOD set (other_veg)",
+  "auroc": 0.8702
+}

@@ -1,0 +1,7 @@
+cls,precision,recall,f1,support
+Capsicum,1.0,1.0,1.0,117
+Carrot,1.0,1.0,1.0,177
+Cucumber,1.0,1.0,1.0,58
+Potato,1.0,1.0,1.0,114
+Raddish,1.0,1.0,1.0,79
+Squash,1.0,1.0,1.0,254

@@ -1,0 +1,19 @@
+# One command installs everything (training, evaluation, predict.py):
+#     pip install -r requirements.txt
+# Python 3.10-3.12 (torch 2.5.x has no wheels for 3.13). CPU build of torch is pulled from the extra index below.
+# predict.py itself needs only: torch, torchvision, pillow (numpy comes with torch).
+# Exact versions used for the reported numbers; see README.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1
+torchvision==0.20.1
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2
+pillow==10.4.0
+imagehash==4.3.1
+matplotlib==3.9.2
+seaborn==0.13.2
+tqdm==4.66.5
+onnx==1.17.0
+onnxruntime==1.20.1
+grad-cam==1.5.4

@@ -1,0 +1,55 @@
+{
+  "config": {
+    "arch": "resnet18",
+    "split_file": "C:\\Users\\zhoma\\Desktop\\magnum-veg\\splits\\split.csv",
+    "images_root": null,
+    "epochs1": 3,
+    "epochs2": 12,
+    "patience": 4,
+    "bs": 32,
+    "lr_head": 0.001,
+    "lr_block": 0.0001,
+    "lr_head2": 0.0003,
+    "photo_boost": 3.0,
+    "label_smoothing": 0.05,
+    "max_minutes": 30,
+    "workers": 0,
+    "out": "C:\\Users\\zhoma\\Desktop\\magnum-veg\\models\\best.pt",
+    "smoke": false
+  },
+  "device": "cpu",
+  "minutes": 9.0,
+  "epochs_run": 9,
+  "best_val": {
+    "val_loss": 0.35200369358062744,
+    "val_loss_w": 0.13470867273601744,
+    "val_acc": 0.9435215946843853,
+    "val_acc_w": 0.9976180468637311,
+    "val_f1": 0.906292845351017,
+    "val_f1_w": 0.9979246233861497
+  },
+  "val_recall": {
+    "Capsicum": 1.0,
+    "Carrot": 1.0,
+    "Cucumber": 1.0,
+    "Potato": 1.0,
+    "Raddish": 1.0,
+    "Squash": 0.91005291005291
+  },
+  "class_weights": {
+    "Capsicum": 1.001,
+    "Carrot": 0.694,
+    "Cucumber": 2.46,
+    "Potato": 1.423,
+    "Raddish": 2.576,
+    "Squash": 0.485
+  },
+  "train_counts": {
+    "Capsicum": 435,
+    "Carrot": 627,
+    "Cucumber": 177,
+    "Potato": 306,
+    "Raddish": 169,
+    "Squash": 898
+  }
+}
