@@ -1,106 +1,108 @@
-# Vegetable recognition from photos (Track A: CNN transfer learning)
+# Распознавание овощей по фото (Трек A: нейросеть, transfer learning)
 
-Test task "Junior Computer Vision / Machine Learning": classify a photo into Capsicum, Carrot, Cucumber, Potato,
-Raddish, Squash (Kaggle `preethi866/vegetable-dataset`). The emphasis is on an honest evaluation: the data turned out to contain
-heavy leakage in the official split, so everything is evaluated on a group-aware split that I built.
+Тестовое задание «Junior Computer Vision / Machine Learning»: по фото определить, какой овощ на нём изображён: Capsicum (перец),
+Carrot (морковь), Cucumber (огурец), Potato (картофель), Raddish (редис), Squash (кабачок). Датасет: Kaggle `preethi866/vegetable-dataset`.
+Главный акцент сделан на честной оценке: в официальном разбиении данных обнаружилась серьёзная утечка, поэтому все метрики
+посчитаны на собственном разбиении по группам.
 
-* Report (2 pages): [`reports/report.md`](reports/report.md)
-* Working log with every number and decision: [`PROGRESS.md`](PROGRESS.md)
+* Отчёт (2 страницы): [`reports/report.md`](reports/report.md)
+* Рабочий журнал со всеми цифрами и решениями: [`PROGRESS.md`](PROGRESS.md) (на английском)
 
-## Headline results (held-out `models/best.pt`, own group-aware test split, 966 images from 42 groups)
+## Главные результаты (модель `models/best.pt`, собственный тест по группам: 966 изображений, 42 группы)
 
-| | own group-aware split | official Kaggle split (retrained, same config) |
+| | собственное разбиение по группам | официальное разбиение Kaggle (переобучено с той же схемой) |
 |---|---|---|
-| accuracy | **93.2 %** (95 % CI 78-100 %, group bootstrap) | 100 % (test files identical to train: 717 of 799) |
-| macro-F1 | 0.926 | 1.000 |
+| accuracy | **93,2 %** (95 % ДИ 78–100 %, bootstrap по группам) | 100 % (тестовых файлов, идентичных train: 717 из 799) |
+| macro-F1 | 0,926 | 1,000 |
 
-66 of the 966 images are misclassified, 63 of them in one held-out Capsicum video. Expect a clear drop on real shop photos
-(see the report).
+Неверно классифицировано 66 из 966 изображений, 63 из них — в одном тестовом видео с перцем. На реальных фото из магазина
+ожидается заметное падение точности (см. отчёт).
 
-## Setup
+## Установка
 
-Developed with Python 3.12.5 on Windows (Python 3.10-3.12 should work; torch 2.5.1 has no wheels for 3.13).
+Разработано на Python 3.12.5 под Windows (Python 3.10–3.12 должны работать; для torch 2.5.1 нет сборок под Python 3.13).
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate            # Linux/macOS: source .venv/bin/activate
-pip install -r requirements.txt   # one command, CPU build of torch (extra index is inside the file)
+pip install -r requirements.txt   # одна команда, CPU-версия torch (дополнительный индекс прописан в файле)
 ```
 
-Pinned versions: torch 2.5.1 (CPU), torchvision 0.20.1, numpy 1.26.4, pandas 2.2.3, scikit-learn 1.5.2, pillow 10.4.0,
+Зафиксированные версии: torch 2.5.1 (CPU), torchvision 0.20.1, numpy 1.26.4, pandas 2.2.3, scikit-learn 1.5.2, pillow 10.4.0,
 imagehash 4.3.1, matplotlib 3.9.2, seaborn 0.13.2, tqdm 4.66.5, onnx 1.17.0, onnxruntime 1.20.1, grad-cam 1.5.4.
-`predict.py` itself needs only torch, torchvision, pillow (and onnxruntime if `--onnx` is used).
+Для самого `predict.py` нужны только torch, torchvision, pillow (и onnxruntime, если используется `--onnx`).
 
-## Prediction (what you run on your closed set)
+## Предсказание (то, что запускается на вашем закрытом наборе)
 
 ```bash
-python predict.py --input path/to/folder --output preds.csv
+python predict.py --input путь/к/папке --output preds.csv
 ```
 
-* Output `filename,label,confidence`; label is one of the 6 classes or `unknown`; confidence has 2 decimals.
-* CPU only, no internet. Weights: `models/final.pt` (trained on all 3879 images) if present, otherwise `models/best.pt`.
-* `unknown`: unreadable file (confidence `0.00`), or the image does not look like one of the 6 vegetables
-  (energy score below the threshold in `models/unknown_config.json`). Switch off with `--no-unknown`.
-* Other options: `--weights`, `--onnx models/final.onnx` (onnxruntime, ~1.5-1.8x faster), `--batch-size`, `--threads`,
-  `--workers`, `--recursive`.
-* Speed on the development PC (16 logical cores, ResNet18, 224 px): end-to-end ~18-28 ms per image with PyTorch and ~11 ms with
-  ONNX Runtime (16 threads); ~55-118 ms / ~37 ms with 1 thread. Timings on this shared PC varied up to 2x between runs
-  (see `outputs/latency.csv`, `outputs/latency_onnx.csv`; ONNX vs PyTorch was measured in the same run).
+* Формат результата: `filename,label,confidence`; label — один из 6 классов или `unknown`; confidence с 2 знаками после запятой.
+* Только CPU, без интернета. Веса: `models/final.pt` (обучен на всех 3879 изображениях), а если его нет — `models/best.pt`.
+* `unknown`: файл не читается (confidence `0.00`) либо изображение не похоже ни на один из 6 овощей
+  (энергетическая оценка ниже порога из `models/unknown_config.json`). Отключается флагом `--no-unknown`.
+* Остальные параметры: `--weights`, `--onnx models/final.onnx` (onnxruntime, быстрее примерно в 1,5–1,8 раза), `--batch-size`,
+  `--threads`, `--workers`, `--recursive`.
+* Скорость на машине разработки (16 логических ядер, ResNet18, 224 px): полный путь «файл → предсказание» около 18–28 мс на
+  изображение с PyTorch и около 11 мс с ONNX Runtime (16 потоков); 55–118 мс / около 37 мс на 1 потоке. Время на этом
+  общем ПК колебалось до 2 раз между запусками (см. `outputs/latency.csv`, `outputs/latency_onnx.csv`; сравнение
+  ONNX и PyTorch измерено в одном запуске).
 
-## Reproduce everything from scratch
+## Как воспроизвести всё с нуля
 
-1. Download the Kaggle dataset (https://www.kaggle.com/datasets/preethi866/vegetable-dataset, or
-   `kaggle datasets download -d preethi866/vegetable-dataset` with the Kaggle CLI) and unzip it so that it contains `Dataset/Dataset/<class>/` and
-   `final_dataset/final_dataset/{train,val,test}/<class>/`. Tell the code where it is:
-   `set MAGNUM_DATA_ROOT=D:\path\to\archive` (PowerShell: `$env:MAGNUM_DATA_ROOT="D:\path\to\archive"`).
-   The default in `src/config.py` is my local path. On Colab pass `--images-root /content/archive/Dataset/Dataset` to
-   `04_train.py`, `05_eval.py`.
-2. Run the scripts in this order (times on a 16-core CPU, no GPU needed):
+1. Скачайте датасет Kaggle (https://www.kaggle.com/datasets/preethi866/vegetable-dataset или командой
+   `kaggle datasets download -d preethi866/vegetable-dataset` через Kaggle CLI) и распакуйте так, чтобы были папки
+   `Dataset/Dataset/<класс>/` и `final_dataset/final_dataset/{train,val,test}/<класс>/`. Укажите коду, где лежат данные:
+   `set MAGNUM_DATA_ROOT=D:\путь\к\archive` (PowerShell: `$env:MAGNUM_DATA_ROOT="D:\путь\к\archive"`).
+   По умолчанию в `src/config.py` прописан мой локальный путь. В Colab передайте `--images-root /content/archive/Dataset/Dataset`
+   в `04_train.py` и `05_eval.py`.
+2. Запустите скрипты в таком порядке (время указано для 16-ядерного CPU, GPU не нужен):
 
 ```bash
-python src/01_audit.py                         # data audit, filename parsing         ~15 s
-python src/02_duplicates.py                    # MD5 / pHash / embeddings, leakage    ~2 min (downloads ResNet18 ImageNet weights once)
-python src/03_split.py                         # own group-aware split + domain checks ~1 min
-python src/04_train.py                         # ResNet18, 2 stages -> models/best.pt  ~9 min
-python src/05_eval.py                          # test metrics, errors.csv, confusion matrix
-python src/05_eval.py --make-official-split    # comparison with the official split
-python src/04_train.py --split-file splits/official_split.csv --out models/official.pt --tag _official   # ~33 min
+python src/01_audit.py                         # аудит данных, разбор имён файлов               ~15 с
+python src/02_duplicates.py                    # MD5 / pHash / эмбеддинги, утечка               ~2 мин (один раз скачает веса ResNet18 ImageNet)
+python src/03_split.py                         # собственное разбиение по группам + проверки    ~1 мин
+python src/04_train.py                         # ResNet18, 2 этапа -> models/best.pt            ~9 мин
+python src/05_eval.py                          # метрики на тесте, errors.csv, матрица ошибок
+python src/05_eval.py --make-official-split    # сравнение с официальным разбиением
+python src/04_train.py --split-file splits/official_split.csv --out models/official.pt --tag _official   # ~33 мин
 python src/05_eval.py --model models/official.pt --split-file splits/official_split.csv --tag _official
-python src/06_gradcam.py                       # Grad-CAM + background-shortcut tests
-python src/tools_error_sheet.py                # contact sheet of the 66 errors
-python src/07_predict_checks.py                # predict.py format / parity / CPU latency
-python src/08_get_ood.py                       # dev-only OOD images from Wikimedia (needs internet)
-python src/08_unknown.py                       # threshold for "unknown" -> models/unknown_config.json
-python src/08_onnx.py                          # ONNX export, parity, speed
-python src/04_train.py --final --out models/final.pt --tag _final     # all data, shipped model  ~13 min
+python src/06_gradcam.py                       # Grad-CAM + проверки зависимости от фона
+python src/tools_error_sheet.py                # контактный лист из 66 ошибок
+python src/07_predict_checks.py                # проверка predict.py: формат / совпадение / задержка на CPU
+python src/08_get_ood.py                       # изображения для unknown (только для разработки, нужен интернет)
+python src/08_unknown.py                       # порог для "unknown" -> models/unknown_config.json
+python src/08_onnx.py                          # экспорт в ONNX, проверка совпадения, скорость
+python src/04_train.py --final --out models/final.pt --tag _final     # все данные, итоговая модель  ~13 мин
 python src/08_onnx.py --weights models/final.pt --out models/final.onnx
 ```
 
-Seeds are fixed (42), but thread scheduling on CPU is not bit-exact, so the last digits of metrics can differ slightly. The numbers
-in the report come from one run; the raw outputs are kept in `outputs/` and `splits/`.
+Зерно генератора фиксировано (42), но порядок потоков на CPU не детерминирован до бита, поэтому последние знаки метрик могут слегка
+отличаться. Цифры в отчёте получены в одном запуске; исходные результаты лежат в `outputs/` и `splits/`.
 
-## Repository layout
+## Структура репозитория
 
 ```
-predict.py                  inference script (root, as requested)
-src/config.py, common.py    paths/constants, shared model + preprocessing code
-src/01_audit.py ... 08_onnx.py   one script per step (see above), tools_error_sheet.py
-models/                     best.pt (held-out), final.pt (shipped), *.onnx, unknown_config.json
-splits/                     split.csv (own split), official_split.csv, folds.csv, units.csv
-outputs/                    metrics, figures, error lists, latency tables, Grad-CAM images
+predict.py                  скрипт предсказания (в корне, как требовалось)
+src/config.py, common.py    пути/константы, общий код модели и предобработки
+src/01_audit.py ... 08_onnx.py   по одному скрипту на шаг (см. выше), tools_error_sheet.py
+models/                     best.pt (отложенная оценка), final.pt (итоговая), *.onnx, unknown_config.json
+splits/                     split.csv (своё разбиение), official_split.csv, folds.csv, units.csv
+outputs/                    метрики, графики, списки ошибок, таблицы задержки, картинки Grad-CAM
 reports/                    report.md
-PROGRESS.md                 working log (decisions, findings, numbers)
+PROGRESS.md                 рабочий журнал (решения, находки, цифры)
 ```
 
-`models/best.pt` is the model behind every reported metric. `models/final.pt` was trained on all images (train+val+test) with the
-same recipe so it has seen more recording sessions, which is why it is the default for `predict.py`; its own numbers on these
-images are therefore not held-out. The "unknown" threshold was fitted on `best.pt` and is reused for `final.pt`.
+`models/best.pt` — модель, на которой получены все приведённые метрики. `models/final.pt` обучена на всех изображениях
+(train+val+test) по той же схеме, поэтому видела больше сессий съёмки; именно её `predict.py` использует по умолчанию. Её собственные
+цифры на этих изображениях поэтому не являются отложенной оценкой. Порог для «unknown» подобран на `best.pt` и перенесён на `final.pt`.
 
-## Known limits (details in the report)
+## Известные ограничения (подробности в отчёте)
 
-* Only 19 videos and 185 photos exist in the whole dataset (204 independent groups); 2-6 videos per class; one phone, four
-  recording days; Raddish comes from one session.
-* The test set contains 6 held-out videos, so the accuracy has a wide confidence interval.
-* The model partly uses background/lighting; frames without a visible vegetable (label noise) exist in the data.
-* The "unknown" detector is only moderate (AUROC 0.87 against other vegetables; 55 % of other-vegetable photos flagged with `best.pt`,
-  37 % with the shipped `final.pt`); no real shop photos were available.
+* Во всём датасете только 19 видео и 185 фотографий (204 независимые группы); на класс приходится 2–6 видео; один телефон,
+  четыре дня съёмки; Raddish снят в одной сессии.
+* В тесте всего 6 отложенных видео, поэтому у accuracy широкий доверительный интервал.
+* Модель частично опирается на фон и освещение; в данных есть кадры без видимого овоща (шум в разметке).
+* Детектор «unknown» лишь умеренный (AUROC 0,87 против других овощей; с `best.pt` помечается 55 % фото других овощей, с итоговой
+  `final.pt` — 37 %); реальных фото из магазина у меня не было.

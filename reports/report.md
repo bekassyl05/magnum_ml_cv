@@ -1,76 +1,76 @@
-# Report: vegetable recognition from photos (Track A)
+# Отчёт: распознавание овощей по фото (Трек A)
 
-## 1. What I found in the data
-* 3879 images (Capsicum 615, Carrot 905, Cucumber 308, Potato 422, Raddish 286, Squash 1343), all 200x200 JPEG, none corrupt.
-* The file names (`YYYYMMDD_HHMMSS[_frame_N].jpg`) show that 3694 images are **frames of only 19 videos**; the other 185 are phone photos
-  (EXIF: Samsung SM-A536E). So there are only **204 independent groups**, 2-6 videos per class, recorded on four days
-  (2025-11-13, 11-17, 12-10, 2026-01-01). Raddish exists only on one day (12-10), so class and session are confounded.
-* Exact duplicates inside `Dataset/`: none. But the official `final_dataset` (5380 files) is not a partition of `Dataset/`: **every
-  file is a byte-identical copy of a `Dataset/` file** (3879 unique files, 1501 extra copies). **717 of 799 official test files (90 %) are
-  byte-identical to a train file**, and 99 % of test frames come from a video that is also in train. I checked with MD5, perceptual
-  hashes (pHash+dHash), ResNet18 embeddings and filename/video-id overlap; near-duplicate clusters never mix two groups or two classes.
-* **The official split cannot be trusted**: it measures memorisation of videos, not generalisation.
+## 1. Что я нашёл в данных
+* 3879 изображений (Capsicum 615, Carrot 905, Cucumber 308, Potato 422, Raddish 286, Squash 1343), все 200×200, JPEG, битых нет.
+* По именам файлов (`YYYYMMDD_HHMMSS[_frame_N].jpg`) видно, что 3694 изображения — **кадры всего 19 видео**; остальные 185 — фото с телефона
+  (EXIF: Samsung SM-A536E). Итого только **204 независимые группы**, на класс приходится 2–6 видео, съёмка в четыре дня
+  (2025-11-13, 11-17, 12-10, 2026-01-01). Raddish снят только в один день (12-10), поэтому класс и сессия съёмки перепутаны.
+* Точных дубликатов внутри `Dataset/` нет. Но официальный `final_dataset` (5380 файлов) не является разбиением `Dataset/`: **каждый файл —
+  побайтовая копия файла из `Dataset/`** (3879 уникальных файлов, 1501 лишняя копия). **717 из 799 официальных тестовых файлов (90 %)
+  побайтово совпадают с файлом из train**, а 99 % тестовых кадров принадлежат видео, которое есть и в train. Проверял через MD5,
+  перцептивные хэши (pHash+dHash), эмбеддинги ResNet18 и пересечение имён/идентификаторов видео; кластеры почти-дубликатов
+  никогда не смешивают две группы или два класса.
+* **Официальному разбиению доверять нельзя**: оно измеряет запоминание видео, а не обобщение.
 
-## 2. How I split the data
-Unit = group (video, or a single photo). Whole videos go to one split, so no test video appears in train. A search over all
-video-to-split assignments picks the one closest to 70/15/15; 20 % of the photos of each class go to val and to test (photos are
-closest to real photos). Result: train 2612, val 301, test 966 (42 groups); zero overlap of groups, MD5 and near-duplicate
-clusters, checked by assertions. Limits: val is tiny (for four classes it contains photos only), the test set contains 6 videos, and
-Cucumber/Potato/Raddish train on one video each. Metrics are therefore reported with a group-bootstrap interval and also
-group-balanced.
+## 2. Как я разбил данные
+Единица = группа (видео или одно фото). Видео целиком попадает в одну часть, поэтому тестовых видео нет в train. Перебор всех
+вариантов распределения видео по частям выбирает ближайший к 70/15/15; по 20 % фото каждого класса идут в val и в test (фото ближе
+всего к реальным снимкам). Итог: train 2612, val 301, test 966 (42 группы); пересечений групп, MD5 и кластеров почти-дубликатов нет,
+это проверяется проверками в коде. Ограничения: val крошечный (по четырём классам в нём только фото), в тесте 6 видео, а Cucumber/Potato/Raddish
+обучаются на одном видео каждый. Поэтому метрики приведены с доверительным интервалом (bootstrap по группам) и в групповой нормировке.
 
-## 3. Model
-ResNet18 (ImageNet weights), 224 px, two stages: head only (3 epochs), then last block + head with lower learning rates;
-class-weighted loss, label smoothing 0.05, photos sampled 3x more often. Model selection on the group-balanced val macro-F1 (epoch 5).
-Augmentations were chosen from what the data analysis showed: random-resized crop (framing on shelves), flip, rotation +-20 deg,
-colour jitter with tiny hue (lighting differs per day, but colour is a true class cue), Gaussian blur (photos are 12x smoother than
-video frames, 95 % of training data are frames), random erasing (hands, price tags). Not used: vertical flip, strong hue shifts, mixup/CutMix.
+## 3. Модель
+ResNet18 (веса ImageNet), 224 px, два этапа: сначала только «голова» (3 эпохи), затем последний блок и голова с меньшим learning rate;
+взвешенная по классам функция потерь, label smoothing 0,05, фото выбираются в 3 раза чаще. Выбор модели по групповому macro-F1 на val (эпоха 5).
+Аугментации подобраны по результатам анализа данных: random-resized crop (разное кадрирование на полках), отражение, поворот ±20°, изменение
+цвета с минимальным hue (освещение меняется по дням, но цвет — настоящий признак класса), размытие по Гауссу (фото в 12 раз гладче видеокадров,
+а 95 % обучающих данных — кадры), random erasing (руки, ценники). Не использовал: вертикальное отражение, сильные сдвиги hue, mixup/CutMix.
 
-## 4. Results on the held-out test split
-| | own group-aware split | official split (same recipe, retrained) |
+## 4. Результаты на отложенном тесте
+| | своё разбиение по группам | официальное разбиение (та же схема, переобучено) |
 |---|---|---|
-| accuracy | **93.2 %** (95 % CI 78.1-100 %) | 100 % |
-| macro-F1 | 0.926 | 1.000 |
-| group-balanced acc / F1 | 0.990 / 0.988 | 1.000 / 1.000 |
-| frames / photos | 92.9 % / 100 % (36 photos) | 100 % / 100 % |
+| accuracy | **93,2 %** (95 % ДИ 78,1–100 %) | 100 % |
+| macro-F1 | 0,926 | 1,000 |
+| accuracy / F1 с нормировкой по группам | 0,990 / 0,988 | 1,000 / 1,000 |
+| кадры / фото | 92,9 % / 100 % (36 фото) | 100 % / 100 % |
 
-Per class (precision/recall): Carrot, Raddish, Squash, Potato ~1.00; Capsicum 0.99/0.63, Cucumber 0.67/1.00. **63 of the 66 errors
-come from a single held-out Capsicum video** (61.6 % of its frames predicted Cucumber); the other five test videos are 98-100 %.
-The official split would have hidden this failure completely. The gap (100 % vs 93.2 %) is mainly leakage, but the two test sets are
-not identical in composition. Calibration: ECE 0.114 -> 0.031 after temperature scaling.
+По классам (precision/recall): Carrot, Raddish, Squash, Potato около 1,00; Capsicum 0,99/0,63, Cucumber 0,67/1,00. **63 из 66 ошибок
+приходятся на одно отложенное видео с перцем** (61,6 % его кадров предсказаны как Cucumber); остальные пять тестовых видео — 98–100 %.
+Официальное разбиение полностью скрыло бы этот провал. Разрыв (100 % против 93,2 %) в основном вызван утечкой, но тестовые наборы
+по составу не идентичны. Калибровка: ECE 0,114 → 0,031 после температурного масштабирования.
 
-## 5. Why the model fails (Grad-CAM and tests)
-* In correct cases the CAM is on the vegetable (partly also on neighbouring items); in errors it is on background, glare, edges or a
-  hand (share of CAM mass outside the central box 0.97 of uniform for errors vs 0.73 for correct predictions).
-* Hiding the central box leaves 76.7 % accuracy (keeping only the box: 87.2 %), so the model uses context as well as the object.
-  Capsicum depends on the centre (recall 0.63 -> 0.14 when hidden); "Cucumber" acts as a fallback class.
-* The weak video differs in lighting (dark counter, glare, hand holding the pepper). By manual count (rough) ~22 of the 66 errors show
-  **no vegetable at all** (video-frame labels are inherited from the video: label noise), ~17 only a part of one, ~27 a clearly visible
-  vegetable, among them a lime-yellow pepper that has no counterpart in training (hypothesis: read as cucumber).
+## 5. Почему модель ошибается (Grad-CAM и проверки)
+* В верных случаях карта Grad-CAM лежит на овоще (частично и на соседних предметах); в ошибках — на фоне, бликах, краях или руке (доля массы CAM
+  вне центрального квадрата относительно равномерной: 0,97 у ошибок против 0,73 у верных предсказаний).
+* Если скрыть центральный квадрат, accuracy остаётся 76,7 % (если оставить только квадрат — 87,2 %), то есть модель использует и контекст, и сам объект.
+  Capsicum зависит от центра (recall 0,63 → 0,14 при скрытии центра); «Cucumber» работает как запасной класс.
+* Слабое видео отличается освещением (тёмная столешница, блики, рука с перцем). По ручному подсчёту (грубому) около 22 из 66 ошибок показывают
+  **вообще никакого овоща** (метки кадров видео наследуются от видео: шум в разметке), около 17 — только часть овоща, около 27 — хорошо видимый
+  овощ, среди них лаймово-жёлтый перец, аналога которого нет в обучении (гипотеза: распознан как огурец).
 
-## 6. predict.py and the bonuses
-`python predict.py --input DIR --output preds.csv`: CPU, offline, batched, EXIF-aware, corrupt files give `unknown,0.00` instead of a
-crash. ~18-28 ms per image end-to-end with PyTorch (16 threads), 55-118 ms with 1 thread (runs on this shared PC differ by up to 2x). **ONNX** export matches PyTorch (max logit
-difference 7e-6) and runs 1.5-1.8x faster (e.g. 10.7 vs 17.6 ms, 16 threads).
-**Unknown**: energy score on logits (AUROC 0.87 vs 0.81 for max softmax) between val images and 188 other-vegetable/shelf photos from
-Wikimedia; threshold = the value that keeps 95 % of val images (fixed before looking at test). It rejects 55 % of the other-vegetable
-photos and keeps 97.9 % of test images, but only 2 of 22 frames without a vegetable and almost none of the confident errors; accuracy
-of kept test images rises only from 93.2 % to 93.6 %. It is a modest safety net, not a "no vegetable" detector. With the shipped `final.pt` (more confident, trained on all data) the same
-threshold flags 37 % of the other-vegetable photos (70 of 188) instead of 55 %, i.e. a more conservative setting.
+## 6. predict.py и бонусы
+`python predict.py --input DIR --output preds.csv`: CPU, без интернета, батчами, учитывает EXIF; битые файлы дают `unknown,0.00` вместо падения.
+Около 18–28 мс на изображение «от файла до результата» с PyTorch (16 потоков), 55–118 мс на 1 потоке (запуски на этом общем ПК различаются до 2 раз).
+**ONNX**-экспорт совпадает с PyTorch (максимальная разница логитов 7e-6) и работает в 1,5–1,8 раза быстрее (например, 10,7 против 17,6 мс, 16 потоков).
+**Unknown**: энергетическая оценка по логитам (AUROC 0,87 против 0,81 у max softmax) между изображениями val и 188 фото других овощей/полок
+из Wikimedia; порог — значение, при котором сохраняется 95 % изображений val (зафиксирован до просмотра теста). Он отбрасывает 55 % фото
+других овощей и сохраняет 97,9 % тестовых изображений, но лишь 2 из 22 кадров без овоща и почти ни одной уверенной ошибки; accuracy
+сохранённых тестовых изображений растёт только с 93,2 % до 93,6 %. Это скромная страховка, а не детектор «овоща нет». С итоговой `final.pt`
+(увереннее, обучена на всех данных) тот же порог помечает 37 % фото других овощей (70 из 188) вместо 55 %, то есть настройка консервативнее.
 
-## 7. Expected drop on your closed store set
-I expect a clearly lower accuracy than 93 %, but cannot measure how much. Reasons: shelves, packaging, price tags and several products per
-photo (training: one phone, four days, clean close-ups, one object, 200 px); backgrounds and lighting will be new, and one unseen
-condition already cost 38 % of a class's frames here; the model partly relies on context; errors will be systematic (a whole shelf
-wrong, often as Cucumber) and confident; the unknown threshold may reject valid vegetables when the logits shrink under domain shift.
+## 7. Ожидаемое падение на вашем закрытом наборе из магазинов
+Ожидаю заметно более низкую точность, чем 93 %, но измерить, насколько, не могу. Причины: полки, упаковка, ценники и несколько товаров на
+одном фото (в обучении: один телефон, четыре дня, чистые крупные планы, один объект, 200 px); фон и освещение будут новыми, а одно невиданное
+условие здесь уже стоило 38 % кадров класса; модель частично опирается на контекст; ошибки будут систематическими (целая полка неверно,
+часто как Cucumber) и уверенными; порог unknown может отбрасывать нормальные овощи, когда логиты уменьшаются при смещении домена.
 
-## 8. What did not work / not done
-The unknown detector is only moderate; no real store photos for validation; val too small for sharp model selection; test accuracy rests
-on 6 videos; the lime-yellow-pepper explanation and the context reliance are hypotheses supported by Grad-CAM, not proven.
-The shipped `final.pt` (all data, same recipe) cannot be evaluated; all numbers come from `best.pt`.
+## 8. Что не получилось / не сделано
+Детектор unknown лишь умеренный; нет реальных фото из магазинов для проверки; val слишком мал для точного выбора модели; точность на тесте
+держится на 6 видео; объяснение про лаймово-жёлтый перец и опора на контекст — гипотезы, подкреплённые Grad-CAM, но не доказанные.
+Итоговую `final.pt` (все данные, та же схема) нельзя оценить; все цифры получены на `best.pt`.
 
-## 9. What I would do next
-(1) Collect 100-200 real shelf photos per class (several stores, cameras, lighting) and evaluate on them first. (2) Add an explicit
-"no vegetable / other" class trained with real negatives instead of a threshold. (3) Clean video labels (drop or relabel frames without a
-visible vegetable). (4) Second held-out split with different videos to measure the video-level variance. (5) Stronger colour/background
-augmentation and multi-crop inference for wide shelf photos.
+## 9. Что я сделал бы дальше
+(1) Собрать 100–200 реальных фото полок на класс (несколько магазинов, камер, освещений) и оценить сначала на них. (2) Добавить явный
+класс «нет овоща / другое», обученный на реальных негативных примерах, вместо порога. (3) Почистить метки видео (убрать или переразметить
+кадры без видимого овоща). (4) Второе отложенное разбиение с другими видео, чтобы измерить разброс по видео. (5) Более сильные аугментации
+цвета/фона и инференс по нескольким кропам для широких фото полок.
