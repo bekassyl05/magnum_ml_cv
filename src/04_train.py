@@ -1,9 +1,3 @@
-"""Step 4: transfer-learning training. Uses ONLY train + val rows of splits/split.csv (test is never read).
-Usage:  python src/04_train.py              (full run)
-        python src/04_train.py --smoke      (1+1 epoch on a tiny subset, to check the pipeline)
-Colab:  pass --images-root /content/Dataset/Dataset if the OneDrive paths in split.csv do not exist.
-Outputs: models/best.pt, outputs/train_log.csv, outputs/fig_train_curves.png, outputs/train_summary.json
-"""
 import argparse
 import json
 import random
