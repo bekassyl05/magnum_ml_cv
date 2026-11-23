@@ -1,8 +1,3 @@
-"""Step 2: duplicates & leakage. Usage: python src/02_duplicates.py [--tp 6 --td 6 --tc 0.97] [--rescan]
-Needs outputs/inventory.csv (from 01_audit.py). First run downloads ResNet18 weights (~45 MB).
-Outputs (outputs/): clusters.csv, leakage_report.txt, video_split_matrix.csv,
-fig_threshold_cross_video.png, fig_dup_pairs.png, md5.csv, hashes.npz, emb.npy
-"""
 import argparse
 import hashlib
 import os
