@@ -1,7 +1,3 @@
-"""Contact sheet of misclassified test frames (to count frames where no vegetable is visible = label noise).
-  python src/tools_error_sheet.py              (all errors, sorted by confidence)
-Output: outputs/gradcam/error_sheet.jpg  (small JPEG, 10 columns, index numbers on every tile)
-"""
 import sys
 from pathlib import Path
 
