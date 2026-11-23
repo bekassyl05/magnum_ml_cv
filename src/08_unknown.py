@@ -1,9 +1,3 @@
-"""Step 8b: 'unknown' threshold (bonus 1).  Needs data/ood (python src/08_get_ood.py).
-    python src/08_unknown.py [--weights models/best.pt] [--retention 0.95]
-Selection data: val images of the 6 classes (in-distribution) + OOD set (other vegetables / own photos).
-Independent checks (not used for selection): test images, frames without any vegetable.
-Outputs: outputs/ood_threshold.png, outputs/ood_thresholds.csv, models/unknown_config.json (read by predict.py)
-"""
 import argparse
 import json
 import sys
