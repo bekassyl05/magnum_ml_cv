@@ -1,15 +1,3 @@
-"""Step 8a: build the small out-of-distribution (OOD) set for the 'unknown' bonus. DEV ONLY: nothing here is needed
-at inference time and data/ is git-ignored.
-    python src/08_get_ood.py
-Creates:
-  data/ood/other_veg/        ~150 photos of OTHER vegetables/fruits/food/shelves from Wikimedia Commons (search by keyword,
-                             JPEG thumbnails, 320 px). Review outputs/ood_sheet.jpg and delete wrong images by hand.
-  data/ood/no_veg_frames/    test frames in which no vegetable is visible (empty counter / hand only), taken from
-                             outputs/errors.csv by the tile numbers seen on outputs/gradcam/error_sheet.jpg
-  data/ood/own/              (optional) put your own photos here: empty shelf, tomatoes, packaged goods ...
-Caveat: Commons photos look different from the dataset (studio/web style), which makes them easier to detect than
-real shop photos. Own photos in data/ood/own/ make the threshold choice more realistic.
-"""
 import json
 import shutil
 import sys
