@@ -1,13 +1,10 @@
-"""Shared helpers (used by training, evaluation, Grad-CAM and predict.py)."""
 from pathlib import Path
-
 import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
 from PIL import Image
 from torchvision import transforms as T
-
 from src import config as C
 
 IMG_SIZE = 224
