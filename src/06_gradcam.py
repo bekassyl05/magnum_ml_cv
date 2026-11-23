@@ -1,8 +1,3 @@
-"""Step 6: Grad-CAM + background-shortcut tests (uses models/best.pt and outputs/test_predictions.csv).
-  python src/06_gradcam.py
-Outputs: outputs/gradcam/*.png (per-example figures, overview, Capsicum comparison), gradcam_stats.csv,
-         shortcut_tests.csv, gradcam_summary.json  (+ printed tables)
-"""
 import argparse
 import json
 import sys
