@@ -1,10 +1,3 @@
-"""Step 5: evaluation on the held-out test split (run ONCE per model, no tuning on test).
-  python src/05_eval.py                                   # best.pt on my group-aware test split
-  python src/05_eval.py --make-official-split             # writes splits/official_split.csv (Kaggle's split)
-  python src/05_eval.py --model models/official.pt --split-file splits/official_split.csv --tag _official
-Outputs (outputs/): test_metrics{tag}.json, test_per_class{tag}.csv, test_per_group{tag}.csv,
-  test_predictions{tag}.csv, errors{tag}.csv, fig_confusion{tag}.png
-"""
 import argparse
 import json
 import sys
