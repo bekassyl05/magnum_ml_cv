@@ -1,7 +1,3 @@
-"""Step 8c (bonus 2): ONNX export, numerical parity with PyTorch, CPU latency PyTorch vs onnxruntime.
-    python src/08_onnx.py [--weights models/best.pt] [--out models/best.onnx]
-Output: <out>.onnx, outputs/latency_onnx.csv (same protocol as Step 7: 10 warm-ups, 100 images, mean/median/p95).
-"""
 import argparse
 import os
 import platform
