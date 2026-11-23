@@ -1,7 +1,3 @@
-"""Step 7 checks for predict.py: (1) run it as a grader would on 20 test images (+ corrupt files), verify CSV
-format, (2) parity with the evaluation code in src/common.py, (3) CPU latency benchmark -> outputs/latency.csv.
-    python src/07_predict_checks.py
-"""
 import csv
 import os
 import platform
