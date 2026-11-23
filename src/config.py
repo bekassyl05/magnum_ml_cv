@@ -1,4 +1,3 @@
-"""Central paths and constants. Every script in src/ imports from here."""
 import os
 import re
 from pathlib import Path
