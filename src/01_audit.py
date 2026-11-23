@@ -1,7 +1,3 @@
-"""Step 1: data audit. Usage: python src/01_audit.py [--rescan]
-Outputs (outputs/): inventory.csv, audit_summary.csv, videos.csv, dates_by_class.csv,
-resolutions_top.csv, fig_*.png, samples_<class>.png
-"""
 import argparse
 import random
 import sys
