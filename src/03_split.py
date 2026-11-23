@@ -1,8 +1,3 @@
-"""Step 3: group-aware split + domain-gap checks. Usage: python src/03_split.py
-Needs outputs/clusters.csv (02_duplicates.py).
-Outputs: splits/split.csv, splits/folds.csv, splits/units.csv, outputs/split_balance.csv,
-         outputs/domain_features.csv, outputs/domain_checks.csv
-"""
 import itertools
 import sys
 from concurrent.futures import ThreadPoolExecutor
